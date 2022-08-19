@@ -1,12 +1,12 @@
-# Some DEMOs 
-(The Jerk/Accel spikes are just caused by inconsistent Frenet to Cartesian conversion)  
-Successfully adapt the traffcic flow:
+# DEMOs 
+(Jerk/Accel峰值是由于Frenet坐标系向Cartesian坐标系转化不一致引起的)  
+自适应交通流：
 
 <p align="center">
      <img src="./followTraffic.gif" alt=" " width="40%" height="40%">
      <br>followTraffic.gif
 </p>
-Moments that bad trajectory decision got abandoned:
+决策：舍弃代价值较高的轨迹
 
 <p align="center">
      <img src="./abandon1.gif" alt=" " width="40%" height="40%">
@@ -16,22 +16,22 @@ Moments that bad trajectory decision got abandoned:
      <img src="./abandon2.gif" alt=" " width="40%" height="40%">
      <br>abandon2.gif
 </p>
-Performance in crowded traffic:
+在拥挤交通中的表现:
 
 <p align="center">
      <img src="./crowdTraffic.gif" alt=" " width="40%" height="40%">
      <br>crowdTraffic.gif
 </p>
-Aggressive driving:
+激进型驾驶行为:
 
 <p align="center">
      <img src="./agressiveDriving.gif" alt=" " width="40%" height="40%">
      <br>aggressiveDriving.gif
 </p>
 
-# Introduction 
-(Sorry the code is a bit messy, did not spend much time to organize it :)
-This is a revisit for the path planning project of the Self-Driving Car Engineer Nanodegree Program. I don't see much students actually utilizing the JMT approach for this project, mainly because of the inaccurate conversion between Cartesian and Frenet, which causes a lot bad waypoints/map offsets and inconsistency of trajectory generations. After fixing the getXY function with spline tools, the JMT algorithm works much better, but there is still space to improve (like make the general map data resolution finer. Currently it has sample points about 30 meters away from each other. Shown below)   
+# 介绍
+(抱歉，代码有点乱，没有花很多时间来整理)
+目前，它的采样点之间相距约30米。如下所示  
 ```cpp
 784.6001 1135.571 0 -0.02359831 -0.9997216
 815.2679 1134.93 30.6744785308838 -0.01099479 -0.9999396
