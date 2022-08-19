@@ -37,16 +37,17 @@
 815.2679 1134.93 30.6744785308838 -0.01099479 -0.9999396
 844.6398 1134.911 60.0463714599609 -0.002048373 -0.9999979
 ```
-Since I'm not doing the project to pass the course, I won't worry about the conversion error/spikes too much. I'm just trying to realize the optimal trajectory generation [this paper](http://video.udacity-data.com.s3.amazonaws.com/topher/2017/July/595fd482_werling-optimal-trajectory-generation-for-dynamic-street-scenarios-in-a-frenet-frame/werling-optimal-trajectory-generation-for-dynamic-street-scenarios-in-a-frenet-frame.pdf), to make the vehicle able to perform good trajectory decision without the help of the behavioral layer. With just the help of 5th and 6th order degree polynomials.
+只实现最优轨迹生成 [this paper](http://video.udacity-data.com.s3.amazonaws.com/topher/2017/July/595fd482_werling-optimal-trajectory-generation-for-dynamic-street-scenarios-in-a-frenet-frame/werling-optimal-trajectory-generation-for-dynamic-street-scenarios-in-a-frenet-frame.pdf), 使车辆能够在不依赖行为层的情况下进行良好的轨迹决策。只需借助五阶和六阶多项式。
 
-# Optimal Trajectory Generation Steps
+# 最优轨迹生成
 
-## Bellman’s Principle of Optimality
-The reason why we use this method is that we want an "optimal solution" for the incoming traffic scenario. But instead of making the decision follow some behavior planner(FSM approach), we rely on the theoretical best results of a specific cost function. In other words, we generate all possible trajectories within a selected maneuver duration and pick the best feasible trajectory over time. Once the optimal solution is founded, the entire path planning shaw maintain optimal (based on the Bellman’s Principle of Optimality).
-To ensure the consistency of the solution, a reasonable replan frequency has to be selected. I picked about 400ms for the step size of each new iteration, which is sufficient enough to generate 3~6 success trajectory. If the replan frequency is too low, that the car maneuver longer than the optimal solution covered time span, may result in overshoot or instability. More details about this part can be found in the paper. 
+## 贝尔曼最优原则
+我们使用这种方法的原因是，我们希望在交通流场景找到一个“最优解决方案”。 但是，我们不是按照某些行为规划师(FSM方法)来做决策，而是依赖于特定成本函数的理论最佳结果。 换句话说，我们在选定的机动持续时间内生成所有可能的轨迹，并在一段时间内选择最佳可行轨迹。一旦建立了最优解，整个路径规划将保持最优(基于贝尔曼最优原则)。
+为了确保解决方案的一致性，必须选择合理的重新规划频率。 我选择了大约400ms作为每次新迭代的步长，这足以产生3~6个成功轨迹。如果重规划频率过低，车辆机动时间超过最优解覆盖的时间跨度，可能会导致超调或不稳定。关于这部分的更多细节可以在论文中找到。
 
-## The Starting States and End States 
-To form a quintic/quartic polynomial, we need the initial state's position, velocity, and acceleration (part of the boundary conditions to solve for the trajectory coefficients). For the very first trajectory, I just used ego car's current position, velocity = 0 and acceleration = 0 for both longitudinal and lateral starting states. For end states, there will be no lateral movements(just for the sake of initializing it) and the desired ending velocity will be the speed limit with a traveling time of path horizon*0.02 (where the 0.02 is the sampling time of the simulator, and I pick the path horizon to be 250, so 5 seconds travel time in total).  The first lateral and longitudinal solution also play the role of initializing the global "best trajectory" slot.
+## 起始状态和结束状态 
+为了形成五次/四次多项式，我们需要初始状态的位置、速度和加速度(用于求解轨迹系数的边界条件的一部分)。对于第一个轨迹，我只使用了自我汽车的当前位置，纵向和横向启动状态的速度= 0和加速度= 0。对于最终状态，将不存在横向移动(只是为了初始化它)，期望的结束速度将是路径视界*0.02的移动时间的速度限制(其中0.02是模拟器的采样时间，我选择路径视界为250，所以总共5秒的移动时间)。第一个横向和纵向解也起到初始化全局“最佳轨迹”槽的作用。
+
 
 ```cpp
   // start the planing
